@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
+import type { H3Event } from 'h3'
 
-export function getTokenInfo(e) {
+export function getTokenInfo(e: H3Event) {
   let info
 
   const token = getCookie(e, 'token')
@@ -15,10 +16,10 @@ export function getTokenInfo(e) {
 
   try {
     // 解析token
-    info = jwt.verify(token, process.env.JSON_SECRET!)
+    info = jwt.verify(token, process.env.JSON_SECRET!) as jwt.JwtPayload
     const currentTime = Date.now() / 1000
 
-    if (info.exp < currentTime) {
+    if (!info.exp || info.exp < currentTime) {
       return createError({
         statusCode: 401,
         statusMessage: 'token过期!',

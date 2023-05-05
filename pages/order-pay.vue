@@ -40,7 +40,7 @@ const isTimeout = ref(false)
           🌱 {{ course?.price }}
         </span>
       </h5>
-      <!-- <img src="/qrcode.jpg"> -->
+      <img src="http://placehold.it/150x150">
       <div class="flex justify-center items-center py-4 text-green-500">
         <div class="ml-3 text-gray-500 text-sm">
           <p>请用防狼枪扫射二维码</p>
