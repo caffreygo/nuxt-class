@@ -54,7 +54,7 @@ model UsersOnCourses {
   userId   Int
   course   Course @relation(fields: [courseId], references: [id])
   courseId Int
-
+  // 联合主键
   @@id([userId, courseId])
 }
 
