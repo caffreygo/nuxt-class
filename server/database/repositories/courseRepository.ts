@@ -21,3 +21,13 @@ export async function getCourses({ page, size }: PageQuery): Promise<{ courses: 
   ])
   return { courses, total }
 }
+
+export async function getCourseById(id: number): Promise<Course | null> {
+  const result = await prisma.course.findFirst({
+    where: {
+      id,
+    },
+    include: { Catalogue: true },
+  })
+  return result
+}
