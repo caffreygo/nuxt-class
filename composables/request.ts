@@ -4,9 +4,10 @@ type FetchType = typeof $fetch
 type ReqType = Parameters<FetchType>[0]
 type FetchOptions = Parameters<FetchType>[1]
 
-export function post<T = unknown>(
-  request: ReqType,
-  body?: any,
+export function httpRequest<T = unknown>(
+  method: any,
+  url: ReqType,
+  bodyOrParams?: any,
   opts?: FetchOptions,
 ) {
   const token = useCookie('token')
@@ -14,10 +15,9 @@ export function post<T = unknown>(
   const route = useRoute()
 
   const defaultOpts = {
-    method: 'post',
+    method,
     // baseURL: '/api',
     headers: { token: token.value } as any,
-    body,
     onRequestError() {
       message.error('请求出错，请重试！')
     },
@@ -45,6 +45,26 @@ export function post<T = unknown>(
       }
     },
   } as FetchOptions
+  if (defaultOpts) {
+    if (method === 'post')
+      defaultOpts.body = bodyOrParams
+    else
+      defaultOpts.params = bodyOrParams
+  }
+  return $fetch<T>(url, merge(defaultOpts, opts))
+}
 
-  return $fetch<T>(request, merge(defaultOpts, opts))
+export function httpPost<T = unknown>(
+  request: ReqType,
+  body?: any,
+  opts?: FetchOptions,
+) {
+  return httpRequest<T>('post', request, body, opts)
+}
+
+export function httpGet<T = unknown>(
+  request: ReqType,
+  opts?: FetchOptions,
+) {
+  return httpRequest<T>('get', request, null, opts)
 }

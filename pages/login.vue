@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { FormInst, FormRules } from 'naive-ui'
+import type { IResult } from '~/types/IResult'
+
 useHead({
   title: '登录',
 })
@@ -7,6 +10,47 @@ useHead({
 definePageMeta({
   layout: 'blank',
 })
+
+// 获取表单实例用于校验
+const formRef = ref<FormInst>()
+// 数据模型
+const model = ref({
+  username: '',
+  password: '',
+})
+// 校验规则
+const rules: FormRules = {
+  username: [{
+    required: true,
+    message: '请输入用户名',
+    trigger: 'blur',
+  }],
+  password: [{
+    required: true,
+    message: '请输入密码',
+    trigger: 'blur',
+  }],
+}
+
+// 保存登录状态
+const store = useUser()
+const login = () => {
+  // 校验
+  formRef.value!.validate(async (errors) => {
+    if (!errors) {
+      const { ok, data } = await httpPost<IResult>('/api/login', {
+        username: model.value.username,
+        password: model.value.password,
+      })
+      if (ok) {
+        // 保存user状态
+        store.userInfo = data
+        // 跳转首页
+        navigateTo('/')
+      }
+    }
+  })
+}
 </script>
 
 <template>
@@ -21,16 +65,16 @@ definePageMeta({
 
   <NAlert title="演示账号和密码为：test" type="info" class="mb-6" />
 
-  <NForm ref="formRef" class="w-[340px]" size="large">
+  <NForm ref="formRef" :model="model" :rules="rules" class="w-[340px]" size="large">
     <NFormItem :show-label="false" path="username">
-      <NInput clearable placeholder="用户名" />
+      <NInput v-model:value="model.username" clearable placeholder="用户名" />
     </NFormItem>
     <NFormItem :show-label="false" path="password">
-      <NInput clearable placeholder="密码" type="password" />
+      <NInput v-model:value="model.password" clearable placeholder="密码" type="password" />
     </NFormItem>
 
     <div>
-      <NButton class="w-full" type="primary">
+      <NButton class="w-full" type="primary" @click="login">
         登录
       </NButton>
     </div>
