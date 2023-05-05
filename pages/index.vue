@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: '羊村学堂',
+  title: '菜鸟学堂',
 })
 
 const { data, error } = await useFetch('/api/indexdata')

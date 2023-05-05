@@ -1,5 +1,6 @@
 import type { Course } from '@prisma/client'
 import prisma from '~/server/database/client'
+import type { PageQuery } from '~~/types/PageQuery'
 
 export async function getNewCourses(): Promise<Course[] | null> {
   const result = await prisma.course.findMany({
@@ -7,4 +8,16 @@ export async function getNewCourses(): Promise<Course[] | null> {
     take: 4,
   })
   return result
+}
+
+export async function getCourses({ page, size }: PageQuery): Promise<{ courses: Course[] | null; total: number }> {
+  const [courses, total] = await Promise.all([
+    prisma.course.findMany({
+      orderBy: { id: 'desc' },
+      skip: page * size,
+      take: size,
+    }),
+    prisma.course.count(),
+  ])
+  return { courses, total }
 }
