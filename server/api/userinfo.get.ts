@@ -9,13 +9,14 @@ export default defineEventHandler(async (e) => {
   if (!token)
     return { ok: false }
 
-  let info
+  let info: jwt.JwtPayload
   try {
     // 解析token
-    info = jwt.verify(token, process.env.JSON_SECRET!)
+    info = jwt.verify(token, process.env.JSON_SECRET!) as jwt.JwtPayload
+
     const currentTime = Date.now() / 1000
 
-    if (info.exp < currentTime) {
+    if (info.exp && info.exp < currentTime) {
       return sendError(e, createError({
         statusCode: 401,
         statusMessage: 'token过期!',
