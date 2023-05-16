@@ -23,7 +23,7 @@ defineProps({
         查看更多
       </NButton>
     </div>
-    <NGrid x-gap="12" :cols="4" class="mb-6">
+    <NGrid responsive="screen" x-gap="12" cols="1 m:4" class="mb-6">
       <NGi v-for="item in data" :key="item.id">
         <Prod :data="item" :type="type" />
       </NGi>

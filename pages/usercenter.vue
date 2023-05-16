@@ -2,6 +2,10 @@
 const route = useRoute()
 const pageKey = computed(() => route.fullPath)
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const menus = [{
   title: '已购课程',
   name: 'usercenter-buy',

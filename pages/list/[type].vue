@@ -11,7 +11,7 @@ const url = type === 'course' ? '/api/course' : '/api/column'
 const page = ref(1)
 const size = ref(8)
 
-const { data } = await useFetch<IResult>(
+const { data, pending } = await useFetch<IResult>(
   () => `${url}?page=${page.value - 1}`,
   {
     watch: [page],
@@ -35,18 +35,25 @@ const onPageChange = (pageNum: number) => {
         {{ title }}
       </NBreadcrumbItem>
     </NBreadcrumb>
-    <!-- 课程渲染 -->
-    <NGrid :x-gap="20" :cols="4">
-      <NGi v-for="item in data?.data.list" :key="item.id">
-        <Prod :data="item" :type="type" />
-      </NGi>
-    </NGrid>
-    <!-- 分页组件 -->
-    <div class="flex justify-center items-center mt-5 mb-10">
-      <NPagination
-        size="large" :item-count="data?.data.total" :page="page" :page-size="size"
-        :on-update:page="onPageChange"
-      />
-    </div>
+    <Loading :pending="pending">
+      <template #loading>
+        <LoadingCourseSkeleton />
+      </template>
+      <template #default>
+        <!-- 课程渲染 -->
+        <NGrid :x-gap="20" :cols="4">
+          <NGi v-for="item in data?.data.list" :key="item.id">
+            <Prod :data="item" :type="type" />
+          </NGi>
+        </NGrid>
+        <!-- 分页组件 -->
+        <div class="flex justify-center items-center mt-5 mb-10">
+          <NPagination
+            size="large" :item-count="data?.data.total" :page="page" :page-size="size"
+            :on-update:page="onPageChange"
+          />
+        </div>
+      </template>
+    </Loading>
   </div>
 </template>

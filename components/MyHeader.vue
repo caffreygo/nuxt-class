@@ -30,7 +30,7 @@ const handleSelect = (k) => {
       })
       break
     case 'center':
-      navigateTo('/usercenter')
+      navigateTo('/usercenter/info')
       break
   }
 }
@@ -38,7 +38,7 @@ const handleSelect = (k) => {
 
 <template>
   <div class="bg-white fixed top-0 left-0 right-0 shadow-sm z-1000">
-    <div class="container m-auto flex items-center h-[60px] px-4">
+    <div class="container m-auto flex items-center h-[60px] lg:px-4 px-2 box-border">
       <NButton text strong class="text-xl" @click="navigateTo('/')">
         菜鸟学堂
       </NButton>

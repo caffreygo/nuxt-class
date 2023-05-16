@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { IResult } from '../types/IResult'
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const route = useRoute()
 const id = route.query.id
 const { data } = await httpGet<IResult>(`/api/order/${id}`)

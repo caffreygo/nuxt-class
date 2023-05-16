@@ -2,6 +2,10 @@
 import type { Course } from '.prisma/client'
 import type { IResult } from '../types/IResult'
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const route = useRoute()
 const { id } = route.query
 
